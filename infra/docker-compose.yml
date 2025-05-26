@@ -3,7 +3,7 @@ services:
 
   frontend:
     container_name: foodgram-front
-    image: skhreyder/foodgram-frontend:latest
+    image: hetdro451595/foodgram-frontend:latest
     volumes:
       - ../frontend/:/app/result_build/
   db:
@@ -18,7 +18,7 @@ services:
       - pgdata:/var/lib/postgresql/data
   backend:
     container_name: foodgram-backend
-    image: skhreyder/foodgram-backend:latest
+    image: hetdro451595/foodgram-backend:latest
     environment:
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}

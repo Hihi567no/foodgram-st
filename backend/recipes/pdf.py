@@ -45,7 +45,15 @@ class ShoppingCartDocument:
 
         return ingredients
 
+    def _add_metadata(self):
+        """Adds metadata to the PDF document."""
+        self.document.info.author = "Foodgram"
+        self.document.info.title = "Список покупок"
+        self.document.info.subject = "Список ингредиентов для рецептов"
+        self.document.info.creation_date = datetime.now()
+
     def create_document(self):
+        self._add_metadata()
         self.layout.add(Paragraph("Список покупок", font=FONT, font_size=Decimal(20)))
         self.layout.add(Paragraph(f"Дата составления: {datetime.now().strftime('%d.%m.%Y %H:%M')}", 
                               font=FONT, font_size=Decimal(10)))
@@ -67,17 +75,19 @@ class ShoppingCartDocument:
             number_of_columns=4,
             number_of_rows=len(ingredients) + 1
         )
-        
-        table.add(TableCell(Paragraph("#", font=FONT)))
-        table.add(TableCell(Paragraph("Ингредиент", font=FONT)))
-        table.add(TableCell(Paragraph("Количество", font=FONT)))
-        table.add(TableCell(Paragraph("Ед. измерения", font=FONT)))
 
+        # Add table headers with styling and borders
+        table.add(TableCell(Paragraph("#", font=FONT, font_weight=Decimal(700)), border_bottom=Decimal(1), border_top=Decimal(1), border_left=Decimal(1), border_right=Decimal(1)))
+        table.add(TableCell(Paragraph("Ингредиент", font=FONT, font_weight=Decimal(700)), border_bottom=Decimal(1), border_top=Decimal(1), border_left=Decimal(1), border_right=Decimal(1)))
+        table.add(TableCell(Paragraph("Количество", font=FONT, font_weight=Decimal(700)), border_bottom=Decimal(1), border_top=Decimal(1), border_left=Decimal(1), border_right=Decimal(1)))
+        table.add(TableCell(Paragraph("Ед. измерения", font=FONT, font_weight=Decimal(700)), border_bottom=Decimal(1), border_top=Decimal(1), border_left=Decimal(1), border_right=Decimal(1)))
+
+        # Add ingredient rows with borders
         for i, (name, data) in enumerate(sorted(ingredients.items()), 1):
-            table.add(TableCell(Paragraph(str(i), font=FONT)))
-            table.add(TableCell(Paragraph(name.capitalize(), font=FONT)))
-            table.add(TableCell(Paragraph(str(data["amount"]), font=FONT)))
-            table.add(TableCell(Paragraph(data["unit"], font=FONT)))
+            table.add(TableCell(Paragraph(str(i), font=FONT), border_bottom=Decimal(1), border_top=Decimal(1), border_left=Decimal(1), border_right=Decimal(1)))
+            table.add(TableCell(Paragraph(name.capitalize(), font=FONT), border_bottom=Decimal(1), border_top=Decimal(1), border_left=Decimal(1), border_right=Decimal(1)))
+            table.add(TableCell(Paragraph(str(data["amount"]), font=FONT), border_bottom=Decimal(1), border_top=Decimal(1), border_left=Decimal(1), border_right=Decimal(1)))
+            table.add(TableCell(Paragraph(data["unit"], font=FONT), border_bottom=Decimal(1), border_top=Decimal(1), border_left=Decimal(1), border_right=Decimal(1)))
 
         self.layout.add(table)
 
