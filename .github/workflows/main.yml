@@ -43,7 +43,7 @@ jobs:
         with:
           context: ./backend/
           push: true
-          tags: skhreyder/foodgram-backend:latest 
+          tags: hetdro451595/foodgram-backend:latest 
 
   build_and_push_frontend_to_docker_hub:
     name: Push Frontend Docker image to DockerHub
@@ -64,4 +64,4 @@ jobs:
         with:
           context: ./frontend/
           push: true
-          tags: skhreyder/foodgram-frontend:latest 
+          tags: hetdro451595/foodgram-frontend:latest 
