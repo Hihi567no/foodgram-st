@@ -6,7 +6,7 @@ from recipes.models import Ingredient
 
 
 class Command(BaseCommand):
-    help = "Fill Ingredient table with data from json"
+    help = "Import ingredients from json file"
 
     def handle(self, *args, **options):
         with open(options["json_file_path"], "r") as json_file:

@@ -8,8 +8,6 @@ from pathlib import Path
 from datetime import datetime
 from foodgram.settings import STATIC_ROOT
 
-FONT = TrueTypeFont.true_type_font_from_file(Path(STATIC_ROOT / "fonts/DejaVuSans.ttf"))
-
 
 class ShoppingCartDocument:
     def __init__(self, recipes):
@@ -54,17 +52,17 @@ class ShoppingCartDocument:
 
     def create_document(self):
         self._add_metadata()
-        self.layout.add(Paragraph("Список покупок", font=FONT, font_size=Decimal(20)))
+        self.layout.add(Paragraph("Список покупок", font_size=Decimal(20)))
         self.layout.add(Paragraph(f"Дата составления: {datetime.now().strftime('%d.%m.%Y %H:%M')}", 
-                              font=FONT, font_size=Decimal(10)))
+                              font_size=Decimal(10)))
         self.layout.add(Paragraph(" "))
 
-        self.layout.add(Paragraph("Рецепты:", font=FONT, font_size=Decimal(14)))
+        self.layout.add(Paragraph("Рецепты:", font_size=Decimal(14)))
         for recipe in self.recipes:
             recipe_name = recipe["name"]
             author = f"{recipe['author']['first_name']} {recipe['author']['last_name']}"
             self.layout.add(
-                Paragraph(f"- {recipe_name} (автор: {author})", font=FONT)
+                Paragraph(f"- {recipe_name} (автор: {author})")
             )
 
         self.layout.add(Paragraph(" "))
@@ -77,17 +75,17 @@ class ShoppingCartDocument:
         )
 
         # Add table headers with styling and borders
-        table.add(TableCell(Paragraph("#", font=FONT, font_weight=Decimal(700)), border_bottom=Decimal(1), border_top=Decimal(1), border_left=Decimal(1), border_right=Decimal(1)))
-        table.add(TableCell(Paragraph("Ингредиент", font=FONT, font_weight=Decimal(700)), border_bottom=Decimal(1), border_top=Decimal(1), border_left=Decimal(1), border_right=Decimal(1)))
-        table.add(TableCell(Paragraph("Количество", font=FONT, font_weight=Decimal(700)), border_bottom=Decimal(1), border_top=Decimal(1), border_left=Decimal(1), border_right=Decimal(1)))
-        table.add(TableCell(Paragraph("Ед. измерения", font=FONT, font_weight=Decimal(700)), border_bottom=Decimal(1), border_top=Decimal(1), border_left=Decimal(1), border_right=Decimal(1)))
+        table.add(TableCell(Paragraph("#", font_weight=Decimal(700)), border_bottom=Decimal(1), border_top=Decimal(1), border_left=Decimal(1), border_right=Decimal(1)))
+        table.add(TableCell(Paragraph("Ингредиент", font_weight=Decimal(700)), border_bottom=Decimal(1), border_top=Decimal(1), border_left=Decimal(1), border_right=Decimal(1)))
+        table.add(TableCell(Paragraph("Количество", font_weight=Decimal(700)), border_bottom=Decimal(1), border_top=Decimal(1), border_left=Decimal(1), border_right=Decimal(1)))
+        table.add(TableCell(Paragraph("Ед. измерения", font_weight=Decimal(700)), border_bottom=Decimal(1), border_top=Decimal(1), border_left=Decimal(1), border_right=Decimal(1)))
 
         # Add ingredient rows with borders
         for i, (name, data) in enumerate(sorted(ingredients.items()), 1):
-            table.add(TableCell(Paragraph(str(i), font=FONT), border_bottom=Decimal(1), border_top=Decimal(1), border_left=Decimal(1), border_right=Decimal(1)))
-            table.add(TableCell(Paragraph(name.capitalize(), font=FONT), border_bottom=Decimal(1), border_top=Decimal(1), border_left=Decimal(1), border_right=Decimal(1)))
-            table.add(TableCell(Paragraph(str(data["amount"]), font=FONT), border_bottom=Decimal(1), border_top=Decimal(1), border_left=Decimal(1), border_right=Decimal(1)))
-            table.add(TableCell(Paragraph(data["unit"], font=FONT), border_bottom=Decimal(1), border_top=Decimal(1), border_left=Decimal(1), border_right=Decimal(1)))
+            table.add(TableCell(Paragraph(str(i)), border_bottom=Decimal(1), border_top=Decimal(1), border_left=Decimal(1), border_right=Decimal(1)))
+            table.add(TableCell(Paragraph(name.capitalize()), border_bottom=Decimal(1), border_top=Decimal(1), border_left=Decimal(1), border_right=Decimal(1)))
+            table.add(TableCell(Paragraph(str(data["amount"])), border_bottom=Decimal(1), border_top=Decimal(1), border_left=Decimal(1), border_right=Decimal(1)))
+            table.add(TableCell(Paragraph(data["unit"]), border_bottom=Decimal(1), border_top=Decimal(1), border_left=Decimal(1), border_right=Decimal(1)))
 
         self.layout.add(table)
 
