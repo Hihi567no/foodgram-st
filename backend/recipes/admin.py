@@ -58,7 +58,7 @@ class RecipeAdmin(admin.ModelAdmin):
     @mark_safe
     def image(self, obj):
         if obj.image:
-            return f'<img src="{obj.image.url}" width="100" height="100" style="object-fit: cover;" />'
+            return f'<img src="{obj.image.url}" width="80" height="80" style="object-fit: cover;" />'
         return "-"
 
 
