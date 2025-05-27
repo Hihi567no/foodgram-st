@@ -47,6 +47,7 @@ docker-compose up -d --build
 ### 4. Применение миграций и сбор статики
 
 ```bash
+docker-compose exec backend python manage.py makemigrations
 docker-compose exec backend python manage.py migrate
 docker-compose exec backend python manage.py collectstatic --noinput
 ```
