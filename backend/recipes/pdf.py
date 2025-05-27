@@ -3,10 +3,7 @@ from borb.pdf.canvas.layout.table.fixed_column_width_table import FixedColumnWid
 from borb.pdf.canvas.layout.page_layout.multi_column_layout import SingleColumnLayout
 from decimal import Decimal
 from borb.pdf.pdf import PDF
-from borb.pdf.canvas.font.simple_font.true_type_font import TrueTypeFont
-from pathlib import Path
 from datetime import datetime
-from foodgram.settings import STATIC_ROOT
 
 
 class ShoppingCartDocument:
