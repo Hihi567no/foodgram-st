@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - back
 
 jobs:
   backend_tests_with_ruff:
