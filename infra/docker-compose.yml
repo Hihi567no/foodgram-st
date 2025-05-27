@@ -16,7 +16,8 @@ services:
 
   backend:
     container_name: foodgram_back
-    build: ../backend
+    image: hetdro451595/foodgram_backend:latest
+    # build: ../backend
     volumes:
       - static_value:/app/static/
       - media_value:/app/media/
@@ -27,7 +28,8 @@ services:
     
   frontend:
     container_name: foodgram-front
-    build: ../frontend
+    image: hetdro451595/foodgram_frontend:latest
+    # build: ../frontend
     volumes:
       - ../frontend/:/app/result_build/
     depends_on:
