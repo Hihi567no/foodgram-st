@@ -10,7 +10,7 @@ services:
     image: postgres:16.2-alpine
     container_name: foodgram-db
     restart: always
-    env_file: ../.env
+    env_file: ./.env
     volumes:
       - pg_data:/var/lib/postgresql/data
 
@@ -22,7 +22,7 @@ services:
       - media_value:/app/media/
     depends_on:
       - db
-    env_file: ../.env
+    env_file: ./.env
     restart: always
     
   frontend:
