@@ -5,9 +5,13 @@ from .models import Recipe
 
 
 class IngredientSearchFilter(SearchFilter):
+    """Фильтр для поиска ингредиентов."""
+    
     search_param = 'name'
 
 class RecipeFilter(filters.FilterSet):
+    """Фильтр для поиска рецептов."""
+    
     is_favorited = filters.BooleanFilter(method='filter_is_favorited')
     is_in_shopping_cart = filters.BooleanFilter(
         method='filter_is_in_shopping_cart')

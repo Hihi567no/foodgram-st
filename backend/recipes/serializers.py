@@ -1,3 +1,4 @@
+""" Сериализаторы для приложения recipes. """
 from django.db import transaction
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
@@ -8,13 +9,19 @@ from .models import (Favorite, Ingredient, IngredientInRecipe,
 
 
 class IngredientSerializer(serializers.ModelSerializer):
+    """Сериализатор для ингредиентов."""
+
     class Meta:
+        """Мета-класс для IngredientSerializer."""
+        
         model = Ingredient
         fields = '__all__'
         read_only_fields = ('id',)
 
 
 class IngredientInRecipeSerializer(serializers.ModelSerializer):
+    """Сериализатор для связи ингредиента и рецепта."""
+    
     id = serializers.PrimaryKeyRelatedField(
         queryset=Ingredient.objects.all(),
         source='ingredient'
@@ -26,11 +33,15 @@ class IngredientInRecipeSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
+        """Мета-класс для IngredientInRecipeSerializer."""
+        
         model = IngredientInRecipe
         fields = ('id', 'name', 'measurement_unit', 'amount')
 
 
 class RecipeSerializer(serializers.ModelSerializer):
+    """Сериализатор для рецептов."""
+    
     ingredients = IngredientInRecipeSerializer(
         source='ingredient_amounts',
         many=True
@@ -41,6 +52,8 @@ class RecipeSerializer(serializers.ModelSerializer):
     is_in_shopping_cart = serializers.SerializerMethodField()
 
     class Meta:
+        """Мета-класс для RecipeSerializer."""
+        
         model = Recipe
         fields = (
             'id', 'author', 'ingredients', 'is_favorited',
@@ -51,6 +64,8 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     @transaction.atomic
     def create(self, validated_data):
+        """Возвращает созданный рецепт."""
+        
         ingredient_data = validated_data.pop('ingredient_amounts')
         recipe = Recipe.objects.create(**validated_data)
         self._set_ingredients(recipe, ingredient_data)
@@ -58,6 +73,8 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     @transaction.atomic
     def update(self, instance, validated_data):
+        """Возвращает обновленный рецепт."""
+        
         ingredient_data = validated_data.pop('ingredient_amounts', None)
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
@@ -68,6 +85,8 @@ class RecipeSerializer(serializers.ModelSerializer):
         return instance
 
     def _set_ingredients(self, recipe, ingredient_data):
+        """Добавляет в рецепт ингредиенты."""
+        
         IngredientInRecipe.objects.bulk_create([
             IngredientInRecipe(
                 recipe=recipe,
@@ -79,11 +98,15 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     # Ошибка, если поле image есть, но у него пустое значение
     def validate_image(self, value):
+        """Проверяет, что картинка не пустая."""
+        
         if not value:
             raise serializers.ValidationError('У рецепта должна быть картинка')
         return value
 
     def validate(self, data):
+        """Проверяет, что в рецепте есть хотя бы один ингредиент."""
+        
         ingredients = self.initial_data.get('ingredients')
         if not ingredients:
             raise serializers.ValidationError(
@@ -119,6 +142,8 @@ class RecipeSerializer(serializers.ModelSerializer):
         return data
 
     def get_is_favorited(self, obj):
+        """Возвращает True, если пользователь избрал рецепт."""
+        
         request = self.context.get('request')
         return Favorite.objects.filter(
             user=request.user.id,
@@ -126,6 +151,8 @@ class RecipeSerializer(serializers.ModelSerializer):
         ).exists()
 
     def get_is_in_shopping_cart(self, obj):
+        """Возвращает True, если пользователь добавил рецепт в корзину."""
+        
         request = self.context.get('request')
         return ShoppingCart.objects.filter(
             user=request.user.id,
@@ -133,6 +160,8 @@ class RecipeSerializer(serializers.ModelSerializer):
         ).exists()
 
     def to_representation(self, instance):
+        """Возвращает рецепт в виде словаря."""
+        
         representation = super().to_representation(instance)
         representation['image'] = instance.image.url
         return representation

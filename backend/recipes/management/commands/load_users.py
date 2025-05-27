@@ -1,3 +1,4 @@
+""" Загрузка пользователей из файла data/users.json """
 import json
 import os
 

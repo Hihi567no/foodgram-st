@@ -1,17 +1,19 @@
+""" Модели для приложения recipes. """
 from django.db import models
 from django.core.validators import MinValueValidator
 
 from users.models import CustomUser
-from .const import (
-    INGREDIENT_NAME_MAX_LENGTH,
-    RECIPE_NAME_MAX_LENGTH,
-    UNIT_MAX_LENGTH,
-    MIN_INGREDIENT_AMOUNT,
-    MIN_COOKING_TIME,
-)
 
+
+INGREDIENT_NAME_MAX_LENGTH = 128
+RECIPE_NAME_MAX_LENGTH = 256
+UNIT_MAX_LENGTH = 64
+MIN_INGREDIENT_AMOUNT = 1
+MIN_COOKING_TIME = 1
 
 class Ingredient(models.Model):
+    """ Модель для ингредиентов. """
+
     name = models.CharField(
         "Название", max_length=INGREDIENT_NAME_MAX_LENGTH, unique=True
     )
@@ -27,6 +29,8 @@ class Ingredient(models.Model):
 
 
 class Recipe(models.Model):
+    """ Модель для рецептов. """
+
     author = models.ForeignKey(
         CustomUser, on_delete=models.CASCADE, related_name="recipes"
     )
@@ -48,6 +52,8 @@ class Recipe(models.Model):
 
 
 class IngredientInRecipe(models.Model):
+    """ Связь между ингредиентом и рецептом. """
+
     recipe = models.ForeignKey(
         Recipe, on_delete=models.CASCADE, related_name="ingredient_amounts"
     )
@@ -58,6 +64,8 @@ class IngredientInRecipe(models.Model):
 
 
 class Favorite(models.Model):
+    """ Модель для избранных рецептов. """
+    
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     recipe = models.ForeignKey(
         Recipe, on_delete=models.CASCADE, related_name="favorites"
@@ -74,6 +82,8 @@ class Favorite(models.Model):
 
 
 class ShoppingCart(models.Model):
+    """ Модель для корзины. """
+    
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name="in_cart")
 

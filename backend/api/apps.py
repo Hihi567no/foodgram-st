@@ -1,3 +1,4 @@
+""" Конфигурация для приложения api. """
 from django.apps import AppConfig
 
 

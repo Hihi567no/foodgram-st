@@ -1,3 +1,4 @@
+""" Представления для приложения recipes. """
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -17,6 +18,8 @@ from api.pagination import UserPagination
 
 
 class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
+    """Представление для ингредиентов."""
+    
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
@@ -26,6 +29,8 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
+    """Представление для рецептов."""
+    
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
     pagination_class = UserPagination
@@ -34,9 +39,13 @@ class RecipeViewSet(viewsets.ModelViewSet):
     filterset_class = RecipeFilter
 
     def perform_create(self, serializer):
+        """Проверка поля author."""
+        
         serializer.save(author=self.request.user)
 
     def add_delete_recipe(self, request, user, recipe, model):
+        """Добавляет или удаляет рецепт из корзины."""
+        
         obj = model.objects.filter(user=user, recipe=recipe).first()
         if request.method == "POST":
             if obj:
@@ -64,6 +73,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
         url_path="favorite",
     )
     def favorite(self, request, pk=None):
+        """Добавляет или удаляет рецепт из избранного."""
+        
         user = request.user
         recipe = get_object_or_404(Recipe, id=pk)
         return self.add_delete_recipe(request, user, recipe, Favorite)
@@ -75,12 +86,16 @@ class RecipeViewSet(viewsets.ModelViewSet):
         url_path="shopping_cart",
     )
     def shopping_cart(self, request, pk=None):
+        """Добавляет или удаляет рецепт из корзины."""
+        
         user = request.user
         recipe = get_object_or_404(Recipe, id=pk)
         return self.add_delete_recipe(request, user, recipe, ShoppingCart)
 
     @action(methods=["get"], detail=True, url_path="get-link")
     def get_short_link(self, request, pk=None):
+        """Возвращает сокращенную ссылку на рецепт."""
+        
         get_object_or_404(Recipe, id=pk)
         default_link = request.build_absolute_uri(f"/api/recipes/{pk}/")
         short_link = shorten_url(url=default_link, is_permanent=False)
@@ -93,6 +108,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
         permission_classes=(permissions.IsAuthenticated,),
     )
     def download_shopping_cart(self, request):
+        """Возвращает список ингредиентов из корзины."""
+        
         recipes = Recipe.objects.filter(in_cart__user=request.user)
 
         ingredients = (
