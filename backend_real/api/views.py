@@ -17,11 +17,11 @@ from recipes.models import (
     Ingredient, Recipe, UserFavoriteRecipe, UserShoppingCart, RecipeIngredient
 )
 from .filters import RecipeFilterSet, IngredientFilterSet, UserFilterSet
-from .permissions import IsAuthorOrReadOnly, IsOwnerOrReadOnly
+from .permissions import IsAuthorOrReadOnly
 from .serializers import (
     IngredientSerializer, RecipeSerializer, RecipeCreateUpdateSerializer,
-    RecipeMinifiedSerializer, UserProfileSerializer, UserAvatarSerializer,
-    UserSubscriptionListSerializer, UserSubscriptionCreateSerializer
+    RecipeMinifiedSerializer, UserAvatarSerializer,
+    UserSubscriptionListSerializer
 )
 
 

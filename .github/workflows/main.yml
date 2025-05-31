@@ -93,41 +93,41 @@ jobs:
           push: true
           tags: hetdro451595/foodgram_frontend:latest
 
-  deploy:
-    name: Deploy to server
-    runs-on: ubuntu-latest
-    needs:
-      - build_and_push_backend_to_dockerhub
-      - build_and_push_frontend_to_dockerhub
-    if: github.ref == 'refs/heads/main'
-    steps:
-      - name: checkout repo
-        uses: actions/checkout@v4
+  # deploy:
+  #   name: Deploy to server
+  #   runs-on: ubuntu-latest
+  #   needs:
+  #     - build_and_push_backend_to_dockerhub
+  #     - build_and_push_frontend_to_dockerhub
+  #   if: github.ref == 'refs/heads/main'
+  #   steps:
+  #     - name: checkout repo
+  #       uses: actions/checkout@v4
 
-      - name: copy docker-compose.yml via ssh
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USER }}
-          key: ${{ secrets.SSH_KEY }}
-          passphrase: ${{ secrets.SSH_PASSPHRASE }}
-          source: "infra/docker-compose.production.yml,infra/nginx.conf"
-          target: "foodgram"
+  #     - name: copy docker-compose.yml via ssh
+  #       uses: appleboy/scp-action@v0.1.7
+  #       with:
+  #         host: ${{ secrets.HOST }}
+  #         username: ${{ secrets.USER }}
+  #         key: ${{ secrets.SSH_KEY }}
+  #         passphrase: ${{ secrets.SSH_PASSPHRASE }}
+  #         source: "infra/docker-compose.production.yml,infra/nginx.conf"
+  #         target: "foodgram"
 
-      - name: executing remote ssh commands to deploy
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USER }}
-          key: ${{ secrets.SSH_KEY }}
-          passphrase: ${{ secrets.SSH_PASSPHRASE }}
-          script: |
-            cd foodgram/infra
-            sudo docker compose -f docker-compose.production.yml pull
-            sudo docker compose -f docker-compose.production.yml down
-            sudo docker compose -f docker-compose.production.yml up -d
-            # Wait for services to be ready
-            sleep 30
-            # Check if services are running
-            sudo docker compose -f docker-compose.production.yml ps
+  #     - name: executing remote ssh commands to deploy
+  #       uses: appleboy/ssh-action@v1.0.3
+  #       with:
+  #         host: ${{ secrets.HOST }}
+  #         username: ${{ secrets.USER }}
+  #         key: ${{ secrets.SSH_KEY }}
+  #         passphrase: ${{ secrets.SSH_PASSPHRASE }}
+  #         script: |
+  #           cd foodgram/infra
+  #           sudo docker compose -f docker-compose.production.yml pull
+  #           sudo docker compose -f docker-compose.production.yml down
+  #           sudo docker compose -f docker-compose.production.yml up -d
+  #           # Wait for services to be ready
+  #           sleep 30
+  #           # Check if services are running
+  #           sudo docker compose -f docker-compose.production.yml ps
 

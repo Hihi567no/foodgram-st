@@ -4,11 +4,12 @@ Script to check if recipes have images loaded.
 import os
 import django
 
+from recipes.models import Recipe
+
 # Setup Django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'foodgram_backend.settings')
 django.setup()
 
-from recipes.models import Recipe
 
 def check_recipe_images():
     """Check which recipes have images."""
@@ -36,7 +37,7 @@ def check_recipe_images():
     total_recipes = recipes.count()
     recipes_with_images = recipes.exclude(image='').count()
     
-    print(f"\nSUMMARY:")
+    print("\nSUMMARY:")
     print(f"Total recipes: {total_recipes}")
     print(f"Recipes with images: {recipes_with_images}")
     print(f"Recipes without images: {total_recipes - recipes_with_images}")

@@ -1,6 +1,5 @@
 """Custom filters for API endpoints."""
 import django_filters
-from django.db.models import Q
 
 from recipes.models import Recipe, Ingredient
 from users.models import User

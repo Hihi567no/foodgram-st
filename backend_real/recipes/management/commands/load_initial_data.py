@@ -1,5 +1,4 @@
 """Management command to load initial data (admin user, sample users, and recipes)."""
-import os
 import random
 import subprocess
 import sys
@@ -8,7 +7,6 @@ from pathlib import Path
 from django.contrib.auth import get_user_model
 from django.core.files import File
 from django.core.management.base import BaseCommand
-from django.utils import timezone
 
 from recipes.models import Ingredient, Recipe, RecipeIngredient
 

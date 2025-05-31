@@ -31,7 +31,7 @@ def create_recipe_image(recipe_name, filename, width=800, height=600):
         try:
             font_large = ImageFont.load_default()
             font_small = ImageFont.load_default()
-        except:
+        except (OSError, IOError, ImportError):
             font_large = None
             font_small = None
     
