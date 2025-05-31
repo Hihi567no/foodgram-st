@@ -106,6 +106,8 @@ celerybeat.pid
 *.sage.py
 
 # Environments
+.env_db
+.env_backend
 .env
 .venv
 .venv/
@@ -137,6 +139,15 @@ dmypy.json
 # .idea
 .idea
 .vscode
+
+backend/
+backend_new/
+backend_to_copy/
+
+fails.json
+Foodgram.postman_test_run.json
+newie.json
+parse.js
 
 static/
 media/

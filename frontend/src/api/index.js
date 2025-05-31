@@ -135,7 +135,7 @@ class Api {
     const token = localStorage.getItem("token");
     const authorization = token ? { authorization: `Token ${token}` } : {};
     return fetch(
-      `/api/recipes/?page=${page}&limit=${limit}${
+      `api/recipes/?page=${page}&limit=${limit}${
         author ? `&author=${author}` : ""
       }${is_favorited ? `&is_favorited=${is_favorited}` : ""}${
         is_in_shopping_cart ? `&is_in_shopping_cart=${is_in_shopping_cart}` : ""
