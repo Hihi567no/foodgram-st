@@ -18,13 +18,18 @@ class IngredientModelTestCase(TestCase):
         )
         self.assertEqual(ingredient.name, 'Tomato')
         self.assertEqual(ingredient.measurement_unit, 'g')
-        self.assertEqual(str(ingredient), 'Tomato')
+        self.assertEqual(str(ingredient), 'Tomato, g')
 
-    def test_ingredient_unique_name(self):
-        """Test that ingredient names are unique."""
+    def test_ingredient_unique_constraint(self):
+        """Test that ingredient name+unit combinations are unique."""
+        # Same name with different units should be allowed
         Ingredient.objects.create(name='Tomato', measurement_unit='g')
-        with self.assertRaises(Exception):
-            Ingredient.objects.create(name='Tomato', measurement_unit='kg')
+        Ingredient.objects.create(name='Tomato', measurement_unit='kg')
+
+        # Same name+unit combination should raise an error
+        from django.db import IntegrityError
+        with self.assertRaises(IntegrityError):
+            Ingredient.objects.create(name='Tomato', measurement_unit='g')
 
 
 class RecipeModelTestCase(TestCase):

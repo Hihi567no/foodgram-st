@@ -64,4 +64,4 @@ class ModelTestCase(TestCase):
         )
         self.assertEqual(ingredient.name, 'Test Ingredient 2')
         self.assertEqual(ingredient.measurement_unit, 'ml')
-        self.assertEqual(str(ingredient), 'Test Ingredient 2')
+        self.assertEqual(str(ingredient), 'Test Ingredient 2, ml')

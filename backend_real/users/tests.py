@@ -49,7 +49,7 @@ class UserModelTestCase(TestCase):
             first_name='Test',
             last_name='User'
         )
-        self.assertEqual(str(user), 'testuser')
+        self.assertEqual(str(user), 'test@example.com')
 
     def test_user_email_required(self):
         """Test that email is required."""
