@@ -6,8 +6,8 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'foodgram_backend.settings')
 django.setup()
 
 # Now import Django models after setup
-from django.db import models
-from users.models import User
+from django.db import models  # noqa: E402
+from users.models import User  # noqa: E402
 
 
 def cleanup_test_users():

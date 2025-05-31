@@ -10,9 +10,9 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'foodgram_backend.settings')
 django.setup()
 
 # Now import Django models and other Django components after setup
-# from users.models import User
-# from recipes.models import Recipe, Ingredient
-# from django.db import models
+# from users.models import User  # noqa: E402
+# from recipes.models import Recipe, Ingredient  # noqa: E402
+# from django.db import models  # noqa: E402
 
 
 def main():

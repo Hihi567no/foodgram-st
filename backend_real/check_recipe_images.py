@@ -9,7 +9,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'foodgram_backend.settings')
 django.setup()
 
 # Now import Django models after setup
-from recipes.models import Recipe
+from recipes.models import Recipe  # noqa: E402
 
 
 def check_recipe_images():
