@@ -1,10 +1,13 @@
-from django.db import models
-from users.models import User
 import os
 import django
 
+# Setup Django environment first
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'foodgram_backend.settings')
 django.setup()
+
+# Now import Django models after setup
+from django.db import models
+from users.models import User
 
 
 def cleanup_test_users():
