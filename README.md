@@ -353,9 +353,11 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ## 🙏 Acknowledgments
 
 - Django and Django REST Framework communities
-- React development team
-- All contributors and testers
+- Stack overflow
 
 ---
 
 **Happy Cooking! 🍳👨‍🍳👩‍🍳**
+
+MADE BY: 
+Схрейдер Александр
