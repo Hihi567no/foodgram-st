@@ -143,9 +143,11 @@ dmypy.json
 backend/
 backend_new/
 backend_to_copy/
+changes_made_after_2_review/
 
 fails.json
 Foodgram.postman_test_run.json
+diploma.postman_test_run.json
 newie.json
 parse.js
 

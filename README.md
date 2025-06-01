@@ -79,7 +79,8 @@ The application features a modern React frontend with a robust Django REST API b
 ### 🔍 Discovery & Search
 - Browse all published recipes
 - Search by recipe name, author, or ingredients
-- Filter by tags, cooking time, and favorites
+- Filter by tags, cooking time, favorites, and shopping cart
+- Advanced filtering with proper authentication handling
 - Pagination for large result sets
 
 ### ❤️ Social Features
@@ -217,7 +218,8 @@ venv\Scripts\activate  # Windows
 pip install -r requirements.txt
 
 # 2. Create .env file
-echo "DJANGO_DEBUG=True" > .env
+echo "USE_SQLITE=1" > .env
+echo "DJANGO_DEBUG=True" >> .env
 echo "DJANGO_SECRET_KEY=your-development-secret-key" >> .env
 echo "DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,*" >> .env
 
@@ -234,9 +236,11 @@ python manage.py runserver
 
 **Benefits:**
 - ✅ No database installation required
-- ✅ Automatic setup with sample data
+- ✅ Automatic setup with sample data and test users
 - ✅ Perfect for development and testing
 - ✅ Database is a single `db.sqlite3` file
+- ✅ Includes test data for Postman API testing
+- ✅ Pre-configured favorites and shopping cart data
 
 #### Option B: PostgreSQL Setup (Production-like)
 
@@ -338,10 +342,17 @@ The API documentation is available at:
 ### Key API Endpoints
 
 - `GET /api/recipes/` - List all recipes
+- `GET /api/recipes/?is_favorited=1` - Filter favorited recipes
+- `GET /api/recipes/?is_in_shopping_cart=1` - Filter shopping cart recipes
+- `GET /api/recipes/?author={id}` - Filter recipes by author
 - `POST /api/recipes/` - Create a new recipe
 - `GET /api/recipes/{id}/` - Get recipe details
+- `POST /api/recipes/{id}/favorite/` - Add to favorites
+- `POST /api/recipes/{id}/shopping_cart/` - Add to shopping cart
 - `GET /api/ingredients/` - List ingredients
+- `GET /api/ingredients/?name={prefix}` - Search ingredients by name prefix
 - `GET /api/users/` - List users
+- `GET /api/users/subscriptions/` - Get user subscriptions
 - `POST /api/auth/users/` - User registration
 - `POST /api/auth/token/login/` - User login
 
@@ -374,6 +385,9 @@ python manage.py migrate
 # Load sample data
 python manage.py load_ingredients
 python manage.py load_initial_data
+
+# Set up test data for API testing
+python setup_test_data.py
 
 # Create superuser
 python manage.py createsuperuser

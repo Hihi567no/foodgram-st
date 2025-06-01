@@ -43,7 +43,9 @@ docker-compose up --build
 **Done! 🎉** The app includes:
 - 2,186+ ingredients loaded automatically
 - Sample recipes with images
+- Test users with favorites and shopping cart data
 - Admin user: `admin@foodgram.com`
+- Ready for Postman API testing
 
 ## 🔧 Backend Only Setup (Development)
 
@@ -71,16 +73,18 @@ python -m venv venv
 venv\Scripts\activate  # Windows
 pip install -r requirements.txt
 
-echo "DJANGO_DEBUG=True" > .env
+echo "USE_SQLITE=1" > .env
+echo "DJANGO_DEBUG=True" >> .env
 echo "DJANGO_SECRET_KEY=dev-secret-key" >> .env
 
 python manage.py migrate
 python manage.py load_ingredients
 python manage.py load_initial_data
+python setup_test_data.py
 python manage.py runserver
 ```
 
-**Benefits:** ✅ No database installation ✅ Instant setup ✅ Sample data included
+**Benefits:** ✅ No database installation ✅ Instant setup ✅ Sample data included ✅ Test data for API filtering
 
 ### Option B: PostgreSQL (Production-like)
 
@@ -116,6 +120,7 @@ POSTGRES_PORT=5432
 python manage.py migrate
 python manage.py load_ingredients
 python manage.py load_initial_data
+python setup_test_data.py
 python manage.py runserver
 ```
 
@@ -156,6 +161,7 @@ python -m ruff check .
 # Load data
 python manage.py load_ingredients
 python manage.py load_initial_data
+python setup_test_data.py
 
 # Database operations
 python manage.py makemigrations
@@ -223,6 +229,8 @@ After setup, test these URLs:
 **Backend Only (SQLite/PostgreSQL):**
 - http://localhost:8000/api/ - DRF interface
 - http://localhost:8000/api/recipes/ - Recipes with images
+- http://localhost:8000/api/recipes/?is_favorited=1 - Test filtering
+- http://localhost:8000/api/recipes/?is_in_shopping_cart=1 - Test filtering
 - http://localhost:8000/admin/ - Django admin
 
 ## 🎯 Database Comparison
