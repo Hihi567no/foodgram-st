@@ -9,24 +9,23 @@ Usage:
 WARNING: This will permanently delete all data!
 """
 import os
-import sys
 import django
-from django.core.management.color import no_style
 from django.db import connection
 
 # Setup Django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'foodgram_backend.settings')
 django.setup()
 
-from django.contrib.auth import get_user_model
-from django.contrib.contenttypes.models import ContentType
-from django.contrib.sessions.models import Session
-from django.contrib.admin.models import LogEntry
-from rest_framework.authtoken.models import Token
+# Django imports must come after django.setup() - ruff: disable=E402
+from django.contrib.auth import get_user_model  # noqa: E402
+from django.contrib.contenttypes.models import ContentType  # noqa: E402
+from django.contrib.sessions.models import Session  # noqa: E402
+from django.contrib.admin.models import LogEntry  # noqa: E402
+from rest_framework.authtoken.models import Token  # noqa: E402
 
-from users.models import UserSubscription
-from recipes.models import (
-    Ingredient, Recipe, RecipeIngredient, 
+from users.models import UserSubscription  # noqa: E402
+from recipes.models import (  # noqa: E402
+    Ingredient, Recipe, RecipeIngredient,
     Favorite, ShoppingCart
 )
 

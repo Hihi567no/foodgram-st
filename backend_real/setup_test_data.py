@@ -13,8 +13,9 @@ import base64
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'foodgram_backend.settings')
 django.setup()
 
-from django.contrib.auth import get_user_model
-from recipes.models import Ingredient, Recipe, RecipeIngredient, Favorite, ShoppingCart
+# Django imports must come after django.setup() - ruff: disable=E402
+from django.contrib.auth import get_user_model  # noqa: E402
+from recipes.models import Ingredient, Recipe, RecipeIngredient, Favorite, ShoppingCart  # noqa: E402
 
 User = get_user_model()
 
@@ -213,13 +214,13 @@ def main():
 
         print("=" * 50)
         print("Test data setup completed successfully!")
-        print(f"Created/verified:")
+        print("Created/verified:")
         print(f"- {len(users)} test users")
         for user in users:
             print(f"  - {user.username} (ID: {user.id})")
         print(f"- {len(ingredients)} ingredients")
         print(f"- {len(recipes)} recipes")
-        print(f"- Favorites and shopping cart entries for testing filters")
+        print("- Favorites and shopping cart entries for testing filters")
         print("\nIngredients starting with 'S':")
         s_ingredients = [ing for ing in ingredients if ing.name.startswith('S')]
         for ing in s_ingredients:
