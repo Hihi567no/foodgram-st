@@ -3,6 +3,7 @@
 # Recipe validation constants
 MIN_COOKING_TIME = 1
 MAX_COOKING_TIME = 32000
+QUICK_RECIPE_TIME_LIMIT = 30  # minutes
 
 # Ingredient amount validation constants
 MIN_INGREDIENT_AMOUNT = 1

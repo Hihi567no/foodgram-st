@@ -5,7 +5,7 @@ from django.db.models import Count
 
 from .models import (
     Ingredient, Recipe, RecipeIngredient,
-    UserFavoriteRecipe, UserShoppingCart
+    Favorite, ShoppingCart
 )
 
 
@@ -34,11 +34,10 @@ class IngredientAdmin(admin.ModelAdmin):
             recipe_count=Count('recipes', distinct=True)
         )
 
+    @admin.display(description='Used in recipes', ordering='recipe_count')
     def recipe_count(self, obj):
         """Display number of recipes using this ingredient."""
         return obj.recipe_count
-    recipe_count.short_description = 'Used in recipes'
-    recipe_count.admin_order_field = 'recipe_count'
 
 
 @admin.register(Recipe)
@@ -46,11 +45,11 @@ class RecipeAdmin(admin.ModelAdmin):
     """Enhanced admin interface for Recipe model."""
 
     list_display = (
-        'name', 'author', 'cooking_time', 'is_published',
+        'name', 'author', 'cooking_time',
         'publication_date', 'favorites_count', 'image_preview'
     )
     list_filter = (
-        'is_published', 'publication_date', 'cooking_time', 'author'
+        'publication_date', 'cooking_time', 'author'
     )
     search_fields = ('name', 'author__username', 'author__email')
     ordering = ('-publication_date',)
@@ -61,7 +60,7 @@ class RecipeAdmin(admin.ModelAdmin):
             'fields': ('name', 'author', 'image', 'image_preview')
         }),
         ('Recipe Details', {
-            'fields': ('text', 'cooking_time', 'is_published')
+            'fields': ('text', 'cooking_time')
         }),
         ('Metadata', {
             'fields': ('publication_date', 'favorites_count'),
@@ -74,48 +73,43 @@ class RecipeAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         """Optimize queryset with favorites count."""
         return super().get_queryset(request).annotate(
-            favorites_count=Count('user_favorites', distinct=True)
+            favorites_count=Count('favorited_by', distinct=True)
         ).select_related('author')
 
+    @admin.display(description='Favorites', ordering='favorites_count')
     def favorites_count(self, obj):
         """Display number of users who favorited this recipe."""
         return format_html('<strong>{}</strong>', obj.favorites_count)
-    favorites_count.short_description = 'Favorites'
-    favorites_count.admin_order_field = 'favorites_count'
 
+    @admin.display(description='Image Preview')
     def image_preview(self, obj):
         """Display a small preview of the recipe image."""
-        if obj.image:
-            return format_html(
-                '<img src="{}" style="width: 100px; height: 100px; object-fit: cover;" />',
-                obj.image.url
-            )
-        return "No image"
-    image_preview.short_description = 'Image Preview'
+        return format_html(
+            '<img src="{}" style="width: 100px; height: 100px; object-fit: cover;" />',
+            obj.image.url
+        )
 
 
-@admin.register(UserFavoriteRecipe)
-class UserFavoriteRecipeAdmin(admin.ModelAdmin):
-    """Admin interface for UserFavoriteRecipe model."""
+@admin.register(Favorite)
+class FavoriteAdmin(admin.ModelAdmin):
+    """Admin interface for Favorite model."""
 
-    list_display = ('user', 'recipe', 'added_at')
-    list_filter = ('added_at',)
+    list_display = ('user', 'recipe')
     search_fields = ('user__username', 'recipe__name')
-    ordering = ('-added_at',)
+    list_filter = ('user', 'recipe')
 
     def get_queryset(self, request):
         """Optimize queryset with select_related."""
         return super().get_queryset(request).select_related('user', 'recipe')
 
 
-@admin.register(UserShoppingCart)
-class UserShoppingCartAdmin(admin.ModelAdmin):
-    """Admin interface for UserShoppingCart model."""
+@admin.register(ShoppingCart)
+class ShoppingCartAdmin(admin.ModelAdmin):
+    """Admin interface for ShoppingCart model."""
 
-    list_display = ('user', 'recipe', 'added_at')
-    list_filter = ('added_at',)
+    list_display = ('user', 'recipe')
     search_fields = ('user__username', 'recipe__name')
-    ordering = ('-added_at',)
+    list_filter = ('user', 'recipe')
 
     def get_queryset(self, request):
         """Optimize queryset with select_related."""

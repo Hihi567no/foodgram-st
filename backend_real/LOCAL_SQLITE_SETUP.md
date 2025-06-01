@@ -10,6 +10,15 @@ This guide explains how to run the Foodgram backend locally using SQLite instead
 - **Fast Setup**: No configuration needed
 - **Same Features**: All Foodgram features work the same way
 
+## ⚙️ How It Works
+
+The backend automatically detects which database to use based on the `USE_SQLITE=1` environment variable:
+
+- **With `USE_SQLITE=1`**: Uses SQLite database (`db.sqlite3` file)
+- **Without `USE_SQLITE=1`**: Uses PostgreSQL with connection settings from environment variables
+
+This allows you to easily switch between SQLite (development) and PostgreSQL (production) without changing any code.
+
 ## 🚀 Quick Setup (Automated)
 
 ### Option 1: Windows
@@ -55,10 +64,13 @@ pip install -r requirements.txt
 ### 3. Create Environment File
 Create `.env` file in `backend_real/`:
 ```env
+USE_SQLITE=1
 DJANGO_DEBUG=True
 DJANGO_SECRET_KEY=your-local-secret-key
 DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,*
 ```
+
+**Important**: The `USE_SQLITE=1` variable tells Django to use SQLite instead of PostgreSQL.
 
 ### 4. Set Up Database
 ```bash
@@ -71,6 +83,9 @@ python manage.py load_ingredients
 
 # Load sample data (users and recipes with images)
 python manage.py load_initial_data
+
+# Set up test data for API testing (favorites, shopping cart)
+python setup_test_data.py
 
 # Collect static files
 python manage.py collectstatic --noinput
@@ -93,6 +108,8 @@ Once the server is running, you can access:
 - **API Root**: http://localhost:8000/api/
 - **Admin Panel**: http://localhost:8000/admin/
 - **Recipe List**: http://localhost:8000/api/recipes/
+- **Favorited Recipes**: http://localhost:8000/api/recipes/?is_favorited=1
+- **Shopping Cart Recipes**: http://localhost:8000/api/recipes/?is_in_shopping_cart=1
 - **Ingredients**: http://localhost:8000/api/ingredients/
 - **Users**: http://localhost:8000/api/users/
 
@@ -124,6 +141,7 @@ rm db.sqlite3
 python manage.py migrate
 python manage.py load_ingredients
 python manage.py load_initial_data
+python setup_test_data.py
 ```
 
 ### Backup Database
@@ -167,7 +185,9 @@ Use tools like:
 The setup includes:
 - **2,186+ ingredients** from CSV files
 - **Sample users**: admin, john.doe, jane.smith, chef.gordon
+- **Test users**: testuser5, testuser6, testuser7 (for API testing)
 - **Sample recipes** with images
+- **Test data**: Favorites and shopping cart entries for filtering tests
 - **Admin user**: admin@foodgram.com
 
 ## 🔄 Switching Back to PostgreSQL
@@ -202,7 +222,14 @@ python manage.py migrate
 python manage.py collectstatic --noinput
 ```
 
-**4. Permission Error**
+**4. Django tries to connect to PostgreSQL instead of SQLite**
+```bash
+# Make sure your .env file contains:
+USE_SQLITE=1
+DJANGO_DEBUG=True
+```
+
+**5. Permission Error**
 ```bash
 # On Windows, run as administrator
 # On macOS/Linux, check file permissions
@@ -232,10 +259,12 @@ You now have a fully functional Foodgram backend running locally with SQLite!
 
 The setup includes everything you need:
 - ✅ Complete ingredient database
-- ✅ Sample recipes with images  
+- ✅ Sample recipes with images
 - ✅ User authentication system
 - ✅ Admin interface
 - ✅ REST API endpoints
 - ✅ File upload handling
+- ✅ Test data for API filtering (favorites, shopping cart)
+- ✅ Ready for Postman API testing
 
 Happy coding! 🚀

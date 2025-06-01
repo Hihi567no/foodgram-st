@@ -1,5 +1,6 @@
 """User models with enhanced functionality and custom managers."""
 from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db import models
 from django.utils import timezone
 from django.core.validators import EmailValidator
@@ -55,23 +56,24 @@ class User(AbstractUser):
         unique=True,
         validators=[EmailValidator()],
         verbose_name='Email address',
-        help_text='Required. Enter a valid email address.'
+        help_text=f'Required. Enter a valid email address (max {MAX_EMAIL_LENGTH} characters).'
     )
     first_name = models.CharField(
         max_length=MAX_NAME_LENGTH,
         verbose_name='First name',
-        help_text='User\'s first name'
+        help_text=f'User\'s first name (max {MAX_NAME_LENGTH} characters)'
     )
     last_name = models.CharField(
         max_length=MAX_NAME_LENGTH,
         verbose_name='Last name',
-        help_text='User\'s last name'
+        help_text=f'User\'s last name (max {MAX_NAME_LENGTH} characters)'
     )
     username = models.CharField(
         max_length=MAX_USERNAME_LENGTH,
         unique=True,
+        validators=[UnicodeUsernameValidator()],
         verbose_name='Username',
-        help_text='Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.'
+        help_text=f'Required. {MAX_USERNAME_LENGTH} characters or fewer. Letters, digits and @/./+/-/_ only.'
     )
     avatar = models.ImageField(
         upload_to='users/avatars/',

@@ -7,35 +7,29 @@ Settings are organized by functionality and include environment-based configurat
 
 import os
 from pathlib import Path
+from django.core.management.utils import get_random_secret_key
+
+from . import constants
+
+# Load environment variables from .env file
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    # python-dotenv not installed, skip loading .env file
+    pass
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Security settings
-SECRET_KEY = os.getenv(
-    "DJANGO_SECRET_KEY",
-    "django-insecure-pb9^w^o(9i)f_jqx82#cxff3aav(!j3%qo%k3saa=h*5_vda=_"
-)
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", get_random_secret_key())
 
 DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() != 'false'
 
-if DEBUG:
-    ALLOWED_HOSTS = [
-        '192.168.99.100',
-        'localhost',
-        '127.0.0.1',
-    ]
-else:
-    _allowed_hosts_env = os.getenv("DJANGO_ALLOWED_HOSTS")
-    if _allowed_hosts_env:
-        ALLOWED_HOSTS = [
-            host.strip() for host in _allowed_hosts_env.split(',')
-        ]
-    else:
-        raise ValueError(
-            "DJANGO_ALLOWED_HOSTS environment variable must be set "
-            "when DEBUG is False (i.e., in production)."
-        )
+# Allowed hosts configuration
+_allowed_hosts_env = os.getenv("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1")
+ALLOWED_HOSTS = [host.strip() for host in _allowed_hosts_env.split(',')]
 
 # Application definition
 DJANGO_APPS = [
@@ -93,7 +87,7 @@ TEMPLATES = [
 WSGI_APPLICATION = "foodgram_backend.wsgi.application"
 
 # Database configuration
-if DEBUG:
+if os.getenv('USE_SQLITE'):
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
@@ -154,7 +148,7 @@ AUTH_USER_MODEL = "users.User"
 # Django REST Framework configuration
 REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
-    "PAGE_SIZE": 6,
+    "PAGE_SIZE": constants.DEFAULT_PAGE_SIZE,
     "DEFAULT_FILTER_BACKENDS": [
         "django_filters.rest_framework.DjangoFilterBackend",
     ],

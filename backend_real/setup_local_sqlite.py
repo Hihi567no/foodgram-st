@@ -26,11 +26,12 @@ def run_command(command, description):
 def create_env_file():
     """Create .env file for local development."""
     env_content = """# Local development with SQLite
+USE_SQLITE=1
 DJANGO_DEBUG=True
 DJANGO_SECRET_KEY=local-development-secret-key-change-in-production
 DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,*
 
-# PostgreSQL settings (ignored when DEBUG=True)
+# PostgreSQL settings (ignored when USE_SQLITE=1)
 POSTGRES_DB=foodgram
 POSTGRES_USER=foodgram_user
 POSTGRES_PASSWORD=foodgram_password
@@ -73,6 +74,7 @@ def main():
         ("python manage.py migrate", "Applying database migrations"),
         ("python manage.py load_ingredients", "Loading ingredients data"),
         ("python manage.py load_initial_data", "Loading sample data"),
+        ("python setup_test_data.py", "Setting up test data for API testing"),
         ("python manage.py collectstatic --noinput", "Collecting static files"),
     ]
     

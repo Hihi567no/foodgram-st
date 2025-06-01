@@ -23,7 +23,8 @@ class UserAdmin(BaseUserAdmin):
         ('Personal info', {'fields': ('username',
          'first_name', 'last_name', 'avatar')}),
         ('Permissions', {
-            'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions'),
+            'fields': ('is_active', 'is_staff', 'is_superuser',
+                       'groups', 'user_permissions'),
         }),
         ('Important dates', {'fields': ('last_login', 'date_joined')}),
     )
@@ -31,22 +32,23 @@ class UserAdmin(BaseUserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'username', 'first_name', 'last_name', 'password1', 'password2'),
+            'fields': ('email', 'username', 'first_name',
+                       'last_name', 'password1', 'password2'),
         }),
     )
 
     readonly_fields = ('date_joined', 'last_login')
 
+    @admin.display(description='Full Name')
     def full_name(self, obj):
         """Display user's full name."""
         return obj.full_name
-    full_name.short_description = 'Full Name'
 
+    @admin.display(description='Recipes')
     def recipe_count(self, obj):
         """Display number of recipes created by user."""
         count = obj.recipes.count()
         return format_html('<strong>{}</strong>', count)
-    recipe_count.short_description = 'Recipes'
 
 
 @admin.register(UserSubscription)
