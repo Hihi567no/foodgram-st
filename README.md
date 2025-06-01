@@ -37,7 +37,8 @@ The application features a modern React frontend with a robust Django REST API b
 - **Python 3.11** - Programming language
 - **Django 4.2** - Web framework
 - **Django REST Framework** - API framework
-- **PostgreSQL 15** - Database
+- **PostgreSQL 15** - Production database
+- **SQLite** - Development database (built-in)
 - **Gunicorn** - WSGI HTTP Server
 - **Pillow** - Image processing
 - **django-filter** - Advanced filtering
@@ -123,10 +124,20 @@ foodgram-st/
 
 ### Prerequisites
 
-- **Docker** and **Docker Compose** (recommended)
+- **Docker** and **Docker Compose** (for full application deployment)
 - **Python 3.11+** (for local backend development)
 - **Node.js 16+** (for local frontend development)
-- **PostgreSQL 15** (for local database)
+- **PostgreSQL 15** (optional - for production-like local development)
+- **SQLite** (built into Python - for simple local development)
+
+### 🎯 Choose Your Setup
+
+| Setup Type | Best For | Time | Requirements |
+|------------|----------|------|--------------|
+| **🐳 Docker** | Full deployment, production-like | 5 min | Docker |
+| **🔧 SQLite Backend** | Development, learning, testing | 2 min | Python only |
+| **🗄️ PostgreSQL Backend** | Production-like development | 10 min | Python + PostgreSQL |
+| **⚛️ Frontend Only** | Frontend development | 3 min | Node.js |
 
 ### Running with Docker (Recommended)
 
@@ -180,33 +191,75 @@ docker exec foodgram_backend python manage.py createsuperuser
 
 ### Running Backend Separately
 
-For backend development, you can run the Django application locally.
+For backend development, you can run the Django application locally with either SQLite (simple) or PostgreSQL (production-like).
 
-#### 1. Set Up Python Environment
+#### Option A: SQLite Setup (Recommended for Development)
+
+**Quick Setup:**
 ```bash
 cd backend_real
-python -m venv venv
+# Windows
+setup_local_sqlite.bat
 
-# On Windows
-venv\Scripts\activate
-# On macOS/Linux
-source venv/bin/activate
+# macOS/Linux
+./setup_local_sqlite.sh
 
-pip install -r requirements.txt
+# Or use Python script (all platforms)
+python setup_local_sqlite.py
 ```
 
-#### 2. Set Up Database
-Install and start PostgreSQL, then create a database:
+**Manual Setup:**
+```bash
+# 1. Set up Python environment
+python -m venv venv
+venv\Scripts\activate  # Windows
+# source venv/bin/activate  # macOS/Linux
+pip install -r requirements.txt
+
+# 2. Create .env file
+echo "DJANGO_DEBUG=True" > .env
+echo "DJANGO_SECRET_KEY=your-development-secret-key" >> .env
+echo "DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,*" >> .env
+
+# 3. Set up database and load data
+python manage.py makemigrations
+python manage.py migrate
+python manage.py load_ingredients
+python manage.py load_initial_data
+python manage.py collectstatic --noinput
+
+# 4. Start server
+python manage.py runserver
+```
+
+**Benefits:**
+- ✅ No database installation required
+- ✅ Automatic setup with sample data
+- ✅ Perfect for development and testing
+- ✅ Database is a single `db.sqlite3` file
+
+#### Option B: PostgreSQL Setup (Production-like)
+
+**1. Install and Configure PostgreSQL:**
 ```sql
 CREATE DATABASE foodgram;
 CREATE USER foodgram_user WITH PASSWORD 'foodgram_password';
 GRANT ALL PRIVILEGES ON DATABASE foodgram TO foodgram_user;
 ```
 
-#### 3. Configure Environment Variables
-Create a `.env` file in `backend_real/`:
+**2. Set Up Python Environment:**
+```bash
+cd backend_real
+python -m venv venv
+venv\Scripts\activate  # Windows
+# source venv/bin/activate  # macOS/Linux
+pip install -r requirements.txt
+```
+
+**3. Configure Environment Variables:**
+Create `.env` file in `backend_real/`:
 ```env
-DJANGO_DEBUG=True
+DJANGO_DEBUG=False
 DJANGO_SECRET_KEY=your-development-secret-key
 DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1
 
@@ -217,7 +270,7 @@ POSTGRES_HOST=localhost
 POSTGRES_PORT=5432
 ```
 
-#### 4. Run Migrations and Load Data
+**4. Set Up Database:**
 ```bash
 python manage.py makemigrations
 python manage.py migrate
@@ -226,18 +279,26 @@ python manage.py load_initial_data
 python manage.py collectstatic --noinput
 ```
 
-#### 5. Start Development Server
+**5. Start Development Server:**
 ```bash
 python manage.py runserver
 ```
 
-The API will be available at http://localhost:8000/api/
+#### Backend Access Points
 
-#### 6. Run Tests
+The API will be available at:
+- **API Root**: http://localhost:8000/api/
+- **Admin Panel**: http://localhost:8000/admin/
+- **Recipe List**: http://localhost:8000/api/recipes/
+- **Ingredients**: http://localhost:8000/api/ingredients/
+
+#### Run Tests
 ```bash
 python manage.py test
 python -m ruff check .
 ```
+
+For detailed SQLite setup instructions, see [LOCAL_SQLITE_SETUP.md](backend_real/LOCAL_SQLITE_SETUP.md).
 
 ### Running Frontend Separately
 

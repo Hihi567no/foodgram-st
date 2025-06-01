@@ -7,7 +7,7 @@ This guide provides the fastest way to get Foodgram up and running.
 ### 1. Clone and Navigate
 ```bash
 git clone <repository-url>
-cd foodgram-st/food-real/infra
+cd foodgram-st/infra
 ```
 
 ### 2. Create Environment Files
@@ -47,27 +47,62 @@ docker-compose up --build
 
 ## 🔧 Backend Only Setup (Development)
 
-### 1. Setup Environment
+Choose between SQLite (simple) or PostgreSQL (production-like):
+
+### Option A: SQLite (Recommended - 2 minutes)
+
+**Automated Setup:**
+```bash
+cd backend_real
+# Windows
+setup_local_sqlite.bat
+
+# macOS/Linux
+./setup_local_sqlite.sh
+
+# Or Python script (all platforms)
+python setup_local_sqlite.py
+```
+
+**Manual Setup:**
 ```bash
 cd backend_real
 python -m venv venv
 venv\Scripts\activate  # Windows
-# source venv/bin/activate  # macOS/Linux
 pip install -r requirements.txt
+
+echo "DJANGO_DEBUG=True" > .env
+echo "DJANGO_SECRET_KEY=dev-secret-key" >> .env
+
+python manage.py migrate
+python manage.py load_ingredients
+python manage.py load_initial_data
+python manage.py runserver
 ```
 
-### 2. Setup Database
-Install PostgreSQL and create database:
+**Benefits:** ✅ No database installation ✅ Instant setup ✅ Sample data included
+
+### Option B: PostgreSQL (Production-like)
+
+**1. Install PostgreSQL and create database:**
 ```sql
 CREATE DATABASE foodgram;
 CREATE USER foodgram_user WITH PASSWORD 'foodgram_password';
 GRANT ALL PRIVILEGES ON DATABASE foodgram TO foodgram_user;
 ```
 
-### 3. Configure Environment
+**2. Setup Environment:**
+```bash
+cd backend_real
+python -m venv venv
+venv\Scripts\activate  # Windows
+pip install -r requirements.txt
+```
+
+**3. Configure Environment:**
 Create `.env` in `backend_real/`:
 ```env
-DJANGO_DEBUG=True
+DJANGO_DEBUG=False
 DJANGO_SECRET_KEY=dev-secret-key
 POSTGRES_DB=foodgram
 POSTGRES_USER=foodgram_user
@@ -76,7 +111,7 @@ POSTGRES_HOST=localhost
 POSTGRES_PORT=5432
 ```
 
-### 4. Initialize and Run
+**4. Initialize and Run:**
 ```bash
 python manage.py migrate
 python manage.py load_ingredients
@@ -137,16 +172,36 @@ docker-compose down
 # Or change ports in docker-compose.yml
 ```
 
-**Database connection error:**
+**Database connection error (PostgreSQL):**
 - Check PostgreSQL is running
 - Verify credentials in .env files
 - Ensure database exists
 
+**SQLite permission error:**
+```bash
+# Make sure you're in backend_real directory
+cd backend_real
+# Check if virtual environment is activated
+venv\Scripts\activate  # Windows
+```
+
 **Static files not loading:**
 ```bash
+# For Docker
 docker-compose restart nginx
-# Or check nginx logs
-docker-compose logs nginx
+
+# For local development
+python manage.py collectstatic --noinput
+```
+
+**Migration errors:**
+```bash
+# Reset migrations (SQLite)
+rm db.sqlite3
+python manage.py migrate
+
+# Reset migrations (PostgreSQL)
+python manage.py migrate --fake-initial
 ```
 
 **Permission errors:**
@@ -158,10 +213,28 @@ sudo docker-compose up
 ## 📱 Quick Test
 
 After setup, test these URLs:
-- http://localhost - Should show React frontend
-- http://localhost/api/ - Should show DRF interface
-- http://localhost/api/recipes/ - Should show recipes with images
-- http://localhost/admin/ - Should show Django admin (styled)
+
+**Docker Setup:**
+- http://localhost - React frontend
+- http://localhost/api/ - DRF interface
+- http://localhost/api/recipes/ - Recipes with images
+- http://localhost/admin/ - Django admin
+
+**Backend Only (SQLite/PostgreSQL):**
+- http://localhost:8000/api/ - DRF interface
+- http://localhost:8000/api/recipes/ - Recipes with images
+- http://localhost:8000/admin/ - Django admin
+
+## 🎯 Database Comparison
+
+| Feature | SQLite | PostgreSQL | Docker |
+|---------|--------|------------|--------|
+| **Setup Time** | 2 minutes | 10 minutes | 5 minutes |
+| **Requirements** | Python only | PostgreSQL install | Docker install |
+| **Best For** | Development, Learning | Production-like dev | Full deployment |
+| **Sample Data** | ✅ Included | ✅ Included | ✅ Included |
+| **Performance** | Good for dev | Production-ready | Production-ready |
+| **Portability** | Single file | Network database | Containerized |
 
 ## 🎉 Next Steps
 
@@ -171,4 +244,8 @@ After setup, test these URLs:
 4. **Explore the API** at `/api/docs/`
 5. **Check the admin panel** for data management
 
-Need help? Check the full [README.md](README.md) for detailed documentation!
+**For detailed setup guides:**
+- **SQLite**: [LOCAL_SQLITE_SETUP.md](backend_real/LOCAL_SQLITE_SETUP.md)
+- **Full Documentation**: [README.md](README.md)
+
+Need help? Check the troubleshooting section above! 🚀
