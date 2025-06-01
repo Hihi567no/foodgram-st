@@ -147,7 +147,7 @@ This is the easiest way to run the entire application with all services.
 #### 1. Clone the Repository
 ```bash
 git clone <repository-url>
-cd foodgram-st/food-real
+cd foodgram-st
 ```
 
 #### 2. Set Up Environment Variables
