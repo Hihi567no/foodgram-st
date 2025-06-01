@@ -3,7 +3,6 @@
 Setup script for running Foodgram backend locally with SQLite.
 This script automates the setup process for local development.
 """
-import os
 import sys
 import subprocess
 from pathlib import Path
