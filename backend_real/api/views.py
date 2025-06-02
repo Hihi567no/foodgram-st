@@ -17,7 +17,7 @@ from recipes.models import (
 from .filters import RecipeFilterSet, IngredientFilterSet
 from .permissions import IsAuthorOrReadOnly
 from .pagination import StandardResultsSetPagination
-from .utils import format_shopping_list, create_shopping_list_response
+from .utils import create_shopping_list_response
 from .serializers import (
     IngredientSerializer, RecipeSerializer, RecipeCreateUpdateSerializer,
     UserAvatarSerializer, UserSubscriptionListSerializer,
@@ -34,7 +34,7 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_class = IngredientFilterSet
     search_fields = ['name']
-    pagination_class = None  # No pagination for ingredients
+    pagination_class = None
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
@@ -64,7 +64,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         serializer.save(author=self.request.user)
 
     def _add_to_collection(self, request, serializer_class):
-        """Helper method to add recipe to user collection (favorites/cart)."""
+        """Helper method to add recipe to user collection (favorites / cart)."""
         recipe = self.get_object()
         serializer = serializer_class(
             data={'user': request.user.id, 'recipe': recipe.id},
@@ -75,7 +75,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def _remove_from_collection(self, request, model_class):
-        """Helper method to remove recipe from user collection (favorites/cart)."""
+        """Helper method to remove recipe from user collection (favorites / cart)."""
         recipe = self.get_object()
         deleted_count, _ = model_class.objects.filter(
             user=request.user, recipe=recipe
@@ -83,11 +83,10 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
         if deleted_count:
             return Response(status=status.HTTP_204_NO_CONTENT)
-        else:
-            return Response(
-                {'detail': 'Recipe not found in collection'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+        return Response(
+            {'detail': 'Recipe not found in collection'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
 
     @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
     def favorite(self, request, **kwargs):
@@ -126,9 +125,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             total_amount=Sum('amount')
         ).order_by('ingredient__name')
 
-        # Format and return shopping list
-        shopping_list_text = format_shopping_list(ingredients)
-        return create_shopping_list_response(shopping_list_text)
+        return create_shopping_list_response(ingredients)
 
     @action(
         detail=True,
@@ -196,7 +193,7 @@ class UserManagementViewSet(djoser_views.UserViewSet):
         # Get target users directly using double underscore syntax
         target_users = User.objects.filter(
             followers__subscriber=request.user
-        ).distinct()
+        )
 
         page = self.paginate_queryset(target_users)
         serializer = UserSubscriptionListSerializer(
@@ -226,14 +223,10 @@ class UserManagementViewSet(djoser_views.UserViewSet):
 
         if deleted_count:
             return Response(status=status.HTTP_204_NO_CONTENT)
-        else:
-            return Response(
-                {'detail': 'Not subscribed'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-
-
+        return Response(
+            {'detail': 'Not subscribed'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
 
 
 @api_view(['GET'])

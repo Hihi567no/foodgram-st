@@ -2,7 +2,7 @@
 Django settings for foodgram_backend project.
 
 This module contains all configuration settings for the Foodgram application.
-Settings are organized by functionality and include environment-based configuration.
+Settings are organized by functionality and include environment - based configuration.
 """
 
 import os
@@ -16,7 +16,7 @@ try:
     from dotenv import load_dotenv
     load_dotenv()
 except ImportError:
-    # python-dotenv not installed, skip loading .env file
+    # python - dotenv not installed, skip loading .env file
     pass
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -164,7 +164,7 @@ REST_FRAMEWORK = {
 DJOSER = {
     "SEND_ACTIVATION_EMAIL": False,
     "SERIALIZERS": {
-        "user_create": "api.serializers.UserRegistrationSerializer",
+        "user_create": "djoser.serializers.UserCreateSerializer",
         "user": "api.serializers.UserProfileSerializer",
         "current_user": "api.serializers.UserProfileSerializer",
     },

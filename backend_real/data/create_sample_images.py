@@ -18,11 +18,11 @@ def create_recipe_image(recipe_name, filename, width=800, height=600):
         (255, 228, 181),  # Moccasin
         (255, 160, 122),  # Light salmon
     ]
-    
+
     bg_color = random.choice(colors)
     image = Image.new('RGB', (width, height), bg_color)
     draw = ImageDraw.Draw(image)
-    
+
     # Try to use a default font, fallback to basic if not available
     try:
         font_large = ImageFont.truetype("arial.ttf", 48)
@@ -34,7 +34,7 @@ def create_recipe_image(recipe_name, filename, width=800, height=600):
         except (OSError, IOError, ImportError):
             font_large = None
             font_small = None
-    
+
     # Draw recipe name
     if font_large:
         # Calculate text position to center it
@@ -43,11 +43,11 @@ def create_recipe_image(recipe_name, filename, width=800, height=600):
         text_height = bbox[3] - bbox[1]
         x = (width - text_width) // 2
         y = (height - text_height) // 2 - 50
-        
+
         # Draw text with shadow
-        draw.text((x+2, y+2), recipe_name, fill=(0, 0, 0, 128), font=font_large)
+        draw.text((x + 2, y + 2), recipe_name, fill=(0, 0, 0, 128), font=font_large)
         draw.text((x, y), recipe_name, fill=(255, 255, 255), font=font_large)
-        
+
         # Draw "Sample Recipe" subtitle
         subtitle = "Sample Recipe"
         if font_small:
@@ -55,10 +55,10 @@ def create_recipe_image(recipe_name, filename, width=800, height=600):
             subtitle_width = bbox[2] - bbox[0]
             subtitle_x = (width - subtitle_width) // 2
             subtitle_y = y + text_height + 20
-            
-            draw.text((subtitle_x+1, subtitle_y+1), subtitle, fill=(0, 0, 0, 128), font=font_small)
+
+            draw.text((subtitle_x + 1, subtitle_y + 1), subtitle, fill=(0, 0, 0, 128), font=font_small)
             draw.text((subtitle_x, subtitle_y), subtitle, fill=(255, 255, 255), font=font_small)
-    
+
     # Add some decorative elements
     # Draw some circles to make it look more interesting
     for _ in range(5):
@@ -66,9 +66,9 @@ def create_recipe_image(recipe_name, filename, width=800, height=600):
         y = random.randint(0, height)
         radius = random.randint(20, 80)
         circle_color = tuple(max(0, c - 30) for c in bg_color)
-        draw.ellipse([x-radius, y-radius, x+radius, y+radius], 
+        draw.ellipse([x - radius, y - radius, x + radius, y + radius],
                     fill=circle_color + (50,))
-    
+
     return image
 
 def main():
@@ -81,29 +81,29 @@ def main():
         ("Beef Stir Fry", "beef_stir_fry.jpg"),
         ("Chocolate Chip Cookies", "chocolate_chip_cookies.jpg"),
     ]
-    
+
     # Create the sample_images directory if it doesn't exist
     script_dir = os.path.dirname(os.path.abspath(__file__))
     images_dir = os.path.join(script_dir, 'sample_images')
     os.makedirs(images_dir, exist_ok=True)
-    
+
     print("Creating sample recipe images...")
-    
+
     for recipe_name, filename in recipes:
         image_path = os.path.join(images_dir, filename)
-        
+
         # Skip if image already exists
         if os.path.exists(image_path):
             print(f"Image already exists: {filename}")
             continue
-            
+
         try:
             image = create_recipe_image(recipe_name, filename)
             image.save(image_path, 'JPEG', quality=85)
             print(f"Created: {filename}")
         except Exception as e:
             print(f"Error creating {filename}: {e}")
-    
+
     print("Sample image creation completed!")
 
 if __name__ == "__main__":

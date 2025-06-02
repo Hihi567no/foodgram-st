@@ -23,8 +23,9 @@ def format_shopping_list(ingredients):
     return shopping_list.getvalue()
 
 
-def create_shopping_list_response(shopping_list_text):
+def create_shopping_list_response(ingredients):
     """Create HttpResponse for shopping list download."""
+    shopping_list_text = format_shopping_list(ingredients)
     response = HttpResponse(
         shopping_list_text,
         content_type='text/plain; charset=utf-8'

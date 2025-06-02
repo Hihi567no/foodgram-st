@@ -1,4 +1,4 @@
-"""Application-wide constants and configuration values."""
+"""Application - wide constants and configuration values."""
 
 # Recipe validation constants
 MIN_COOKING_TIME = 1
@@ -23,6 +23,6 @@ MAX_EMAIL_LENGTH = 254
 MAX_NAME_LENGTH = 150
 
 # Recipe settings
-MAX_RECIPE_NAME_LENGTH = 200
-MAX_INGREDIENT_NAME_LENGTH = 200
-MAX_MEASUREMENT_UNIT_LENGTH = 200
+MAX_RECIPE_NAME_LENGTH = 256
+MAX_INGREDIENT_NAME_LENGTH = 128
+MAX_MEASUREMENT_UNIT_LENGTH = 64

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr / bin / env python
 """
 Setup script for running Foodgram backend locally with SQLite.
 This script automates the setup process for local development.
@@ -28,7 +28,7 @@ def create_env_file():
     env_content = """# Local development with SQLite
 USE_SQLITE=1
 DJANGO_DEBUG=True
-DJANGO_SECRET_KEY=local-development-secret-key-change-in-production
+DJANGO_SECRET_KEY=local - development - secret - key - change - in - production
 DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,*
 
 # PostgreSQL settings (ignored when USE_SQLITE=1)
@@ -38,12 +38,12 @@ POSTGRES_PASSWORD=foodgram_password
 POSTGRES_HOST=localhost
 POSTGRES_PORT=5432
 """
-    
+
     env_path = Path('.env')
     if env_path.exists():
         print("📝 .env file already exists, skipping creation")
         return True
-    
+
     try:
         with open(env_path, 'w') as f:
             f.write(env_content)
@@ -58,16 +58,16 @@ def main():
     """Main setup function."""
     print("🍽️ Foodgram Backend Local Setup with SQLite")
     print("=" * 50)
-    
+
     # Check if we're in the right directory
     if not Path('manage.py').exists():
         print("❌ Error: manage.py not found. Please run this script from the backend_real directory.")
         sys.exit(1)
-    
+
     # Create .env file
     if not create_env_file():
         sys.exit(1)
-    
+
     # Run setup commands
     setup_commands = [
         ("python manage.py makemigrations users recipes", "Creating migrations"),
@@ -77,13 +77,13 @@ def main():
         ("python setup_test_data.py", "Setting up test data for API testing"),
         ("python manage.py collectstatic --noinput", "Collecting static files"),
     ]
-    
+
     for command, description in setup_commands:
         if not run_command(command, description):
             print(f"\n❌ Setup failed at: {description}")
             print("Please check the error messages above and try again.")
             sys.exit(1)
-    
+
     print("\n🎉 Setup completed successfully!")
     print("\n📋 Next steps:")
     print("1. Create a superuser (optional):")
@@ -91,8 +91,8 @@ def main():
     print("\n2. Start the development server:")
     print("   python manage.py runserver")
     print("\n3. Access your application:")
-    print("   - API: http://localhost:8000/api/")
-    print("   - Admin: http://localhost:8000/admin/")
+    print("   - API: http://localhost:8000 / api/")
+    print("   - Admin: http://localhost:8000 / admin/")
     print("\n📁 Database file: db.sqlite3")
     print("📁 Media files: media/")
     print("📁 Static files: collected_static/")

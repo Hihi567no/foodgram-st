@@ -85,7 +85,7 @@ class RecipeAdmin(admin.ModelAdmin):
     def image_preview(self, obj):
         """Display a small preview of the recipe image."""
         return format_html(
-            '<img src="{}" style="width: 100px; height: 100px; object-fit: cover;" />',
+            '<img src="{}" style="width: 100px; height: 100px; object - fit: cover;" />',
             obj.image.url
         )
 

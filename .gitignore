@@ -153,3 +153,6 @@ parse.js
 
 static/
 media/
+collected_static/
+backend_real/collected_static/
+backend_real/media/

@@ -17,29 +17,27 @@ class RecipeFilterSet(django_filters.FilterSet):
 
     def filter_is_favorited(self, queryset, name, value):
         """Filter recipes that are in user's favorites."""
-        if not self.request.user.is_authenticated:
+        if not self.request.user.is_authenticated or not value:
             return queryset
 
-        # Handle both boolean True and string "1" as True
-        if value is True or value == "1" or value == 1:
-            return queryset.filter(favorites__user=self.request.user)
-        elif value is False or value == "0" or value == 0:
-            return queryset.exclude(favorites__user=self.request.user)
+        # Convert string values to boolean
+        is_favorited = value.lower() in ('1', 'true', 'yes', 'on')
 
-        return queryset
+        if is_favorited:
+            return queryset.filter(favorites__user=self.request.user)
+        return queryset.exclude(favorites__user=self.request.user)
 
     def filter_is_in_shopping_cart(self, queryset, name, value):
         """Filter recipes that are in user's shopping cart."""
-        if not self.request.user.is_authenticated:
+        if not self.request.user.is_authenticated or not value:
             return queryset
 
-        # Handle both boolean True and string "1" as True
-        if value is True or value == "1" or value == 1:
-            return queryset.filter(shoppingcarts__user=self.request.user)
-        elif value is False or value == "0" or value == 0:
-            return queryset.exclude(shoppingcarts__user=self.request.user)
+        # Convert string values to boolean
+        is_in_cart = value.lower() in ('1', 'true', 'yes', 'on')
 
-        return queryset
+        if is_in_cart:
+            return queryset.filter(shoppingcarts__user=self.request.user)
+        return queryset.exclude(shoppingcarts__user=self.request.user)
 
 
 class IngredientFilterSet(django_filters.FilterSet):

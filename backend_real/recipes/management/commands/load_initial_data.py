@@ -15,9 +15,9 @@ User = get_user_model()
 
 class Command(BaseCommand):
     """Load initial data including admin user, sample users, and recipes."""
-    
+
     help = 'Load initial data for development and testing'
-    
+
     def add_arguments(self, parser):
         """Add command arguments."""
         parser.add_argument(
@@ -35,7 +35,7 @@ class Command(BaseCommand):
             action='store_true',
             help='Skip creating sample recipes',
         )
-    
+
     def handle(self, *args, **options):
         """Execute the command logic."""
         self.stdout.write(
@@ -124,7 +124,7 @@ class Command(BaseCommand):
         self.stdout.write(
             self.style.SUCCESS(f'Created admin user: {admin_user.email} with ID: {admin_user.id}')
         )
-    
+
     def create_sample_users(self):
         """Create sample users for testing."""
         sample_users_data = [
@@ -150,25 +150,25 @@ class Command(BaseCommand):
                 'password': 'testpass123'
             },
         ]
-        
+
         created_users = []
-        
+
         for user_data in sample_users_data:
             if User.objects.filter(email=user_data['email']).exists():
                 self.stdout.write(
                     self.style.WARNING(f'User {user_data["email"]} already exists')
                 )
                 continue
-            
+
             user = User.objects.create_user(**user_data)
             created_users.append(user)
-            
+
             self.stdout.write(
                 self.style.SUCCESS(f'Created user: {user.email}')
             )
-        
+
         return created_users
-    
+
     def create_sample_recipes(self, users):
         """Create sample recipes for testing."""
         if not Ingredient.objects.exists():
@@ -178,7 +178,7 @@ class Command(BaseCommand):
                 )
             )
             return
-        
+
         sample_recipes_data = [
             {
                 'name': 'Admin Special Recipe',
@@ -212,9 +212,9 @@ class Command(BaseCommand):
                 'image_filename': 'chocolate_chip_cookies.jpg',
             },
         ]
-        
+
         ingredients = list(Ingredient.objects.all()[:10])  # Get first 10 ingredients
-        
+
         for recipe_data in sample_recipes_data:
             # Check if specific author is requested
             if 'author_username' in recipe_data:
@@ -245,7 +245,7 @@ class Command(BaseCommand):
                 recipe_kwargs['image'] = image_file
 
             recipe = Recipe.objects.create(**recipe_kwargs)
-            
+
             # Add random ingredients to the recipe
             recipe_ingredients = random.sample(ingredients, k=random.randint(3, 6))
             for ingredient in recipe_ingredients:
@@ -254,7 +254,7 @@ class Command(BaseCommand):
                     ingredient=ingredient,
                     amount=random.randint(1, 500)
                 )
-            
+
             self.stdout.write(
                 self.style.SUCCESS(f'Created recipe: "{recipe.name}" by {author.username}')
             )

@@ -24,7 +24,10 @@ class Ingredient(models.Model):
     name = models.CharField(
         max_length=MAX_INGREDIENT_NAME_LENGTH,
         verbose_name='Ingredient name',
-        help_text=f'Name of the ingredient (max {MAX_INGREDIENT_NAME_LENGTH} characters)'
+        help_text=(
+            f'Name of the ingredient '
+            f'(max {MAX_INGREDIENT_NAME_LENGTH} characters)'
+        )
     )
     measurement_unit = models.CharField(
         max_length=MAX_MEASUREMENT_UNIT_LENGTH,
@@ -108,21 +111,7 @@ class Recipe(models.Model):
         verbose_name='Publication date'
     )
 
-    # Many-to-many relationships through intermediate models
-    favorited_by = models.ManyToManyField(
-        User,
-        through='Favorite',
-        related_name='favorite_recipes',
-        blank=True,
-        verbose_name='Users who favorited this recipe'
-    )
-    in_shopping_carts = models.ManyToManyField(
-        User,
-        through='ShoppingCart',
-        related_name='shopping_cart_recipes',
-        blank=True,
-        verbose_name='Users who added this recipe to shopping cart'
-    )
+
 
     objects = RecipeManager()
 
